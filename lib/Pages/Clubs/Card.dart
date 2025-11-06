@@ -62,9 +62,11 @@ class ClubDetailsPage extends StatelessWidget {
                 final logoUrl =
                     clubData['imageUrl']?.toString() ?? defaultImageUrl;
                 final president = clubData['President']?.toString() ?? '—';
+                final secretary = clubData['Secretary']?.toString() ?? '—';
+                final treasurer = clubData['Treasurer']?.toString() ?? '—';
                 final vicePresident =
                     clubData['Vice President']?.toString() ?? '—';
-                final secretary = clubData['Secretary']?.toString() ?? '—';
+
                 final viceSecretary =
                     clubData['Vice Secretary']?.toString() ?? '—';
                 final clubWebsiteUrl = clubData['websiteUrl']?.toString();
@@ -143,8 +145,8 @@ class ClubDetailsPage extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: 100,
-                                        height: 100,
+                                        width: 130,
+                                        height: 130,
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(12),
@@ -166,7 +168,7 @@ class ClubDetailsPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 15),
+                                      const SizedBox(width: 20),
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment:
@@ -177,11 +179,14 @@ class ClubDetailsPage extends StatelessWidget {
                                             _buildLeaderRow(
                                                 'President', president),
                                             const SizedBox(height: 8),
-                                            _buildLeaderRow('Vice President',
-                                                vicePresident),
-                                            const SizedBox(height: 8),
                                             _buildLeaderRow(
                                                 'Secretary', secretary),
+                                            const SizedBox(height: 8),
+                                            _buildLeaderRow(
+                                                'Treasurer', treasurer),
+                                            const SizedBox(height: 8),
+                                            _buildLeaderRow('Vice President',
+                                                vicePresident),
                                             const SizedBox(height: 8),
                                             _buildLeaderRow('Vice Secretary',
                                                 viceSecretary),
