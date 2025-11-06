@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "188778400352",
+    "firebase_url": "https://latestjhcapp-default-rtdb.firebaseio.com",
+    "project_id": "latestjhcapp",
+    "storage_bucket": "latestjhcapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188778400352:android:6311d421bdd8a948085105",
+        "android_client_info": {
+          "package_name": "com.jhc.jhc_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8rIaBSL6oLMgA95CepMU9kBQZYFRJ0aU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188778400352:android:a1a078e5ed8d3589085105",
+        "android_client_info": {
+          "package_name": "lk.jhc.jhcdigitaladmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8rIaBSL6oLMgA95CepMU9kBQZYFRJ0aU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

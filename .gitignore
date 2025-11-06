@@ -1,8 +1,2 @@
 build/
-ios/
-android/
 .dart_tool/
-windows/
-linux/
-macos/
-web/

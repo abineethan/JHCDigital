@@ -1,0 +1,75 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+}
+
+ext {
+    compileSdkVersion = 35
+    targetSdkVersion = 35
+    minSdkVersion = flutter.minSdkVersion 
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '2').toInteger()
+def flutterVersionName = localProperties.getProperty('flutter.versionName', '2.0')
+
+android {
+    namespace "com.jhc.jhc_app"
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "com.jhc.jhc_app"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode
+        versionName flutterVersionName
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("jhcdigital.jks")   // Path to your keystore file
+            storePassword "jhcitclub"            // Keystore password
+            keyAlias "jhcdigital"                          // Alias you used
+            keyPassword "jhcitclub"                   // Key password
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:32.6.0')
+    implementation 'com.google.firebase:firebase-analytics' 
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
+
+}

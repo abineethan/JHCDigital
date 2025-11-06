@@ -1,0 +1,2 @@
+D:/Abi/JHC Digital App/JHCDigital/android/app/.cxx/RelWithDebInfo/3a1w3f45/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Abi/JHC Digital App/JHCDigital/android/app/.cxx/RelWithDebInfo/3a1w3f45/armeabi-v7a/CMakeFiles/rebuild_cache.dir

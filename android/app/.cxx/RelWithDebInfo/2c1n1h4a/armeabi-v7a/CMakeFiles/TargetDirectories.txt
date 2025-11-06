@@ -1,0 +1,2 @@
+C:/Users/JHC IT Club/Desktop/New folder/JHCDigital/android/app/.cxx/RelWithDebInfo/2c1n1h4a/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/JHC IT Club/Desktop/New folder/JHCDigital/android/app/.cxx/RelWithDebInfo/2c1n1h4a/armeabi-v7a/CMakeFiles/rebuild_cache.dir
