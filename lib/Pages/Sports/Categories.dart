@@ -56,107 +56,129 @@ class _CategoriesState extends State<Categories> {
           ),
         ),
         centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 25, 30, 32),
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF121212),
-                Color(0xFF1E1E1E),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
           ),
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF000000),
-              Color(0xFF001020),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        color: const Color.fromARGB(255, 15, 20, 25),
         child: FutureBuilder<List<String>>(
           future: _categoriesFuture,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
+              return Container(
+                color: const Color.fromARGB(255, 15, 20, 25),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 25, 30, 32),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.6),
+                          blurRadius: 25,
+                          offset: const Offset(0, 5),
+                        ),
                       ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.1),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: Center(
                     child: Text(
-                      'Error loading Sports',
+                      'Error loading categories',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                );
-              }
+                ),
+              );
+            }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                color: const Color.fromARGB(255, 15, 20, 25),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 25, 30, 32),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.6),
+                          blurRadius: 25,
+                          offset: const Offset(0, 5),
+                        ),
                       ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.1),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: Center(
                     child: LoadingAnimationWidget.staggeredDotsWave(
                       color: Colors.white,
-                      size: 150,
+                      size: 80,
                     ),
                   ),
-                );
-              }
-              
+                ),
+              );
+            }
 
-            if (snapshot.hasError ||
-                !snapshot.hasData ||
-                snapshot.data!.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.sports_score_rounded,
-                      size: 70,
-                      color: Colors.white.withOpacity(0.3),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'No categories available',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Container(
+                color: const Color.fromARGB(255, 15, 20, 25),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 25, 30, 32),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.6),
+                          blurRadius: 25,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.1),
+                        width: 1,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Check back later for updates',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
-                        fontSize: 14,
-                      ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.emoji_events_rounded,
+                          size: 60,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'No categories available',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Check back later for updates',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             }
@@ -164,24 +186,36 @@ class _CategoriesState extends State<Categories> {
             final categories = snapshot.data!;
 
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.all(16.0),
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   final categoryName = categories[index];
                   final colorScheme = [
-                    [const Color(0xFF6A11CB), const Color(0xFF2575FC)],
-                    [const Color(0xFF11998E), const Color(0xFF38EF7D)],
-                    [const Color(0xFFFF416C), const Color(0xFFFF4B2B)],
-                    [const Color(0xFFFDC830), const Color(0xFFF37335)],
+                    [
+                      const Color.fromARGB(255, 68, 208, 255),
+                      const Color.fromARGB(255, 32, 150, 255)
+                    ],
+                    [
+                      const Color.fromARGB(255, 255, 107, 107),
+                      const Color.fromARGB(255, 255, 64, 129)
+                    ],
+                    [
+                      const Color.fromARGB(255, 119, 255, 107),
+                      const Color.fromARGB(255, 64, 255, 129)
+                    ],
+                    [
+                      const Color.fromARGB(255, 255, 203, 107),
+                      const Color.fromARGB(255, 255, 164, 64)
+                    ],
                   ][index % 4];
 
                   return Container(
-                    height: 150,
+                    height: 140,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(25),
                       gradient: LinearGradient(
                         colors: colorScheme,
                         begin: Alignment.topLeft,
@@ -190,16 +224,19 @@ class _CategoriesState extends State<Categories> {
                       boxShadow: [
                         BoxShadow(
                           color: colorScheme[0].withOpacity(0.4),
-                          spreadRadius: 1,
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                          blurRadius: 25,
+                          offset: const Offset(0, 8),
                         ),
                       ],
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.2),
+                        width: 1,
+                      ),
                     ),
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(18),
+                        borderRadius: BorderRadius.circular(25),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -211,34 +248,35 @@ class _CategoriesState extends State<Categories> {
                             ),
                           );
                         },
-                        splashColor: Colors.white.withOpacity(0.2),
-                        highlightColor: Colors.white.withOpacity(0.1),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                right: 10,
-                                bottom: 10,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              right: 16,
+                              top: 16,
+                              child: Opacity(
+                                opacity: 0.15,
                                 child: Icon(
                                   _getCategoryIcon(categoryName),
-                                  size: 60,
-                                  color: Colors.white.withOpacity(0.15),
+                                  size: 70,
+                                  color: Colors.white,
                                 ),
                               ),
-                              Row(
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.all(14),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.2),
-                                      shape: BoxShape.circle,
+                                      borderRadius: BorderRadius.circular(18),
                                     ),
                                     child: Icon(
                                       _getCategoryIcon(categoryName),
                                       color: Colors.white,
-                                      size: 30,
+                                      size: 28,
                                     ),
                                   ),
                                   const SizedBox(width: 16),
@@ -254,7 +292,7 @@ class _CategoriesState extends State<Categories> {
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w700,
                                             height: 1.2,
                                           ),
                                           maxLines: 2,
@@ -262,11 +300,12 @@ class _CategoriesState extends State<Categories> {
                                         ),
                                         const SizedBox(height: 6),
                                         Text(
-                                          'View match details',
+                                          'View match details and scores',
                                           style: TextStyle(
                                             color:
                                                 Colors.white.withOpacity(0.9),
                                             fontSize: 14,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ],
@@ -274,8 +313,26 @@ class _CategoriesState extends State<Categories> {
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Positioned.fill(
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: Colors.transparent,
+                                  ),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Colors.white.withOpacity(0.05),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

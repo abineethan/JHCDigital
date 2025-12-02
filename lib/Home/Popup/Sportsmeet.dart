@@ -2,15 +2,15 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jhc_app/widgets/Details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:jhc_app/Pages/Sportsmeet/Home.dart';
 
-class AlertPopup extends StatefulWidget {
+class SportsmeetPopup extends StatefulWidget {
   @override
-  _AlertPopupState createState() => _AlertPopupState();
+  _SportsmeetPopupState createState() => _SportsmeetPopupState();
 }
 
-class _AlertPopupState extends State<AlertPopup> {
+class _SportsmeetPopupState extends State<SportsmeetPopup> {
   Map<String, dynamic>? popupData;
   bool isLoading = true;
 
@@ -20,19 +20,11 @@ class _AlertPopupState extends State<AlertPopup> {
     _fetchPopupData();
   }
 
-  bool _isWithinLastWeek(Timestamp timestamp) {
-    DateTime date = timestamp.toDate();
-    DateTime now = DateTime.now();
-    DateTime oneWeekAgo = now.subtract(Duration(days: 7));
-
-    return date.isAfter(oneWeekAgo) && date.isBefore(now);
-  }
-
   Future<void> _fetchPopupData() async {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('Main')
-          .doc('Alert')
+          .doc('Sportsmeet')
           .get();
 
       if (snapshot.exists) {
@@ -41,11 +33,8 @@ class _AlertPopupState extends State<AlertPopup> {
           isLoading = false;
         });
 
-        if (popupData != null &&
-            popupData!.containsKey('date') &&
-            popupData!['date'] is Timestamp &&
-            _isWithinLastWeek(popupData!['date'])) {
-          Future.delayed(Duration(milliseconds: 500), () {
+        Future.delayed(Duration(milliseconds: 500), () {
+          if (popupData != null && popupData!['active'] == true) {
             List<String> imgList = [];
             if (popupData!['images'] is List) {
               imgList = List<String>.from(popupData!['images']);
@@ -59,17 +48,10 @@ class _AlertPopupState extends State<AlertPopup> {
               context,
               popupData!['text'] ?? '',
               firstImage,
-              popupData!['url'] ?? '',
-              popupData!['utube'] ?? '',
-              popupData!['description'] ?? '',
               imgList,
             );
-          });
-        } else {
-          setState(() {
-            isLoading = false;
-          });
-        }
+          }
+        });
       } else {
         setState(() {
           isLoading = false;
@@ -83,8 +65,8 @@ class _AlertPopupState extends State<AlertPopup> {
     }
   }
 
-  void showPopup(BuildContext context, String text, String image, String urls,
-      String utube, String description, List<String> imglist) {
+  void showPopup(
+      BuildContext context, String text, String image, List<String> imglist) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -121,55 +103,47 @@ class _AlertPopupState extends State<AlertPopup> {
                 child: Container(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.9,
-                    maxHeight: MediaQuery.of(context).size.height * 0.3,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 20,
-                        offset: Offset(0, 10),
-                      ),
-                    ],
+                    maxHeight: MediaQuery.of(context).size.height * 0.4,
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20.0),
                     child: Stack(
                       children: [
-                        // Background image with gradient overlay
+                        CachedNetworkImage(
+                          imageUrl: image,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey[300],
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey[300],
+                            child: Icon(Icons.error),
+                          ),
+                        ),
                         Container(
                           width: double.infinity,
                           height: double.infinity,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(image),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black.withOpacity(0.2),
-                                  Colors.black.withOpacity(0.7),
-                                ],
-                              ),
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.2),
+                                Colors.black.withOpacity(0.7),
+                              ],
                             ),
                           ),
                         ),
-
-                        // Content
                         Padding(
                           padding: const EdgeInsets.all(24.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Text with improved styling (using 'text' field)
                               Text(
                                 text,
                                 style: GoogleFonts.poppins(
@@ -181,31 +155,19 @@ class _AlertPopupState extends State<AlertPopup> {
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               ),
-
                               SizedBox(height: 5),
-
-                              // Action buttons
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   SizedBox(width: 12),
-
-                                  // View button
                                   ElevatedButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => Details(
-                                            txts: text, // Use text field
-                                            images: image,
-                                            urls: urls,
-                                            utube: utube,
-                                            description: description,
-                                            imglist:
-                                                imglist, // Pass full image array
-                                          ),
+                                          builder: (context) =>
+                                              SportsmeetHome(),
                                         ),
                                       );
                                     },
@@ -231,8 +193,6 @@ class _AlertPopupState extends State<AlertPopup> {
                             ],
                           ),
                         ),
-
-                        // Close icon button
                         Positioned(
                           top: 16,
                           right: 16,

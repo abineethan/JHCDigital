@@ -11,7 +11,7 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class ShopPageHome extends StatelessWidget {
   static const String defaultImageUrl =
-      'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg';
+      'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg';
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class Card extends StatefulWidget {
     this.description,
     this.imglist = const [""],
     this.utube,
-    this.defaultImageUrl = 'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg',
+    this.defaultImageUrl = 'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg',
     Key? key,
   }) : super(key: key);
 

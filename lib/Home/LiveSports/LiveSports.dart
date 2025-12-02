@@ -52,6 +52,44 @@ class _LiveSports extends State<LiveSports> {
         value['Stats'] != null;
   }
 
+  Widget _buildLoadingWidget() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.withOpacity(0.1), Colors.purple.withOpacity(0.1)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: LoadingAnimationWidget.fallingDot(
+          color: Colors.white,
+          size: 60,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+      child: Text(
+        'Error: $error',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _buildEmptyWidget() {
+    return Center(
+      child: Text(
+        'No live matches available',
+        style: TextStyle(color: Colors.white, fontSize: 20),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DatabaseEvent>(
@@ -164,17 +202,13 @@ class _LiveSports extends State<LiveSports> {
           });
 
           if (matchCount == 0) {
-            return Center(
-              child: Text(
-                'No live matches available',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-            );
+            return _buildEmptyWidget();
           }
 
           return carousel_lib.CarouselSlider.builder(
             itemCount: matchCount,
             itemBuilder: (context, index, id) {
+              // ignore: unused_local_variable
               double cardHeight = isMobile(context)
                   ? MediaQuery.of(context).size.height * 0.3
                   : isTablet(context)
@@ -238,134 +272,143 @@ class _LiveSports extends State<LiveSports> {
                   );
                 },
                 child: Container(
-                  padding: EdgeInsets.all(8),
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  child: Container(
-                    height: cardHeight,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color:
-                              Color.fromARGB(100, 32, 1, 75).withOpacity(0.2),
-                          spreadRadius: 5,
-                          blurRadius: 10,
-                          offset: Offset(0, 3),
+                  margin: EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 20,
+                        spreadRadius: 2,
+                        offset: Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFF1a1a2e),
+                            Color(0xFF16213e),
+                            Color(0xFF0f3460),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(35),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                        child: Container(
+                        border: Border.all(
                           color: Colors.white.withOpacity(0.1),
-                          child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    MatchName[index][0].toUpperCase() +
-                                        MatchName[index].substring(1),
-                                    style: TextStyle(
-                                        fontSize: titleFontSize,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          Team1[index].toUpperCase(),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: teamNameFontSize,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          Team2[index].toUpperCase(),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: teamNameFontSize,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      CachedNetworkImage(
-                                        imageUrl: Team1Logo[index],
-                                        width: logoSize,
-                                        height: logoSize,
-                                        fit: BoxFit.contain,
-                                      ),
-                                      CachedNetworkImage(
-                                        imageUrl: Team2Logo[index],
-                                        width: logoSize,
-                                        height: logoSize,
-                                        fit: BoxFit.contain,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          Team1Points[index],
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'sans-serif',
-                                              fontSize: scoreFontSize),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          Team2Points[index],
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'sans-serif',
-                                              fontSize: scoreFontSize),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                          width: 1,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                MatchName[index][0].toUpperCase() +
+                                    MatchName[index].substring(1),
+                                style: TextStyle(
+                                    fontSize: titleFontSize,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      Team1[index].toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: teamNameFontSize,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      Team2[index].toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: teamNameFontSize,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CachedNetworkImage(
+                                    imageUrl: Team1Logo[index],
+                                    width: logoSize,
+                                    height: logoSize,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  CachedNetworkImage(
+                                    imageUrl: Team2Logo[index],
+                                    width: logoSize,
+                                    height: logoSize,
+                                    fit: BoxFit.contain,
+                                  )
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      Team1Points[index],
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'sans-serif',
+                                          fontSize: scoreFontSize),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      Team2Points[index],
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'sans-serif',
+                                          fontSize: scoreFontSize),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -387,14 +430,9 @@ class _LiveSports extends State<LiveSports> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('Error from snapshot: ${snapshot.error}');
+          return _buildErrorWidget('${snapshot.error}');
         } else {
-          return Center(
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              color: Colors.white,
-              size: 150,
-            ),
-          );
+          return _buildLoadingWidget();
         }
       },
     );

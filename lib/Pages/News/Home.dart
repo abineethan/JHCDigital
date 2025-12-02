@@ -11,7 +11,7 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class NewsPage extends StatelessWidget {
   static const String defaultImageUrl =
-      'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg';
+      'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg';
 
   @override
   Widget build(BuildContext context) {
@@ -26,63 +26,90 @@ class NewsPage extends StatelessWidget {
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Container(
+                  color: const Color.fromARGB(255, 15, 20, 25),
                   child: Center(
-                    child: Text(
-                      'Error loading news',
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 25, 30, 32),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 25,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        'Error loading news',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 );
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Container(
+                  color: const Color.fromARGB(255, 15, 20, 25),
                   child: Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: Colors.white,
-                      size: 150,
+                    child: Container(
+                      padding: const EdgeInsets.all(30),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 25, 30, 32),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 25,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 80,
+                      ),
                     ),
                   ),
                 );
               }
 
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Container(
+                  color: const Color.fromARGB(255, 15, 20, 25),
                   child: Center(
-                    child: Text(
-                      'No News available',
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 25, 30, 32),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 25,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        'No News available',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 );
@@ -90,17 +117,8 @@ class NewsPage extends StatelessWidget {
 
               final documents = snapshot.data!.docs;
 
-              return DecoratedBox(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF000000),
-                      Color(0xFF001020),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
+              return Container(
+                color: const Color.fromARGB(255, 15, 20, 25),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -161,7 +179,7 @@ class NewsPage extends StatelessWidget {
                               }
                             }
 
-                            return Card(
+                            return NewsCard(
                               urls: rawUrl.isNotEmpty ? rawUrl : '',
                               images: firstImage,
                               txts: processedText,
@@ -181,17 +199,59 @@ class NewsPage extends StatelessWidget {
             },
           );
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error initializing Firebase',
-              style: TextStyle(color: Colors.white),
+          return Container(
+            color: const Color.fromARGB(255, 15, 20, 25),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 25, 30, 32),
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.6),
+                      blurRadius: 25,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  'Error initializing Firebase',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           );
         } else {
-          return Center(
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              color: Colors.white,
-              size: 150,
+          return Container(
+            color: const Color.fromARGB(255, 15, 20, 25),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 25, 30, 32),
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.6),
+                      blurRadius: 25,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: Colors.white,
+                  size: 80,
+                ),
+              ),
             ),
           );
         }
@@ -200,7 +260,7 @@ class NewsPage extends StatelessWidget {
   }
 }
 
-class Card extends StatefulWidget {
+class NewsCard extends StatefulWidget {
   final String urls;
   final List<String> imglist;
   final String images;
@@ -209,22 +269,22 @@ class Card extends StatefulWidget {
   final String? description;
   final String defaultImageUrl;
 
-  const Card({
+  const NewsCard({
     required this.urls,
     required this.images,
     required this.txts,
     this.description,
     this.imglist = const [""],
     this.utube,
-    this.defaultImageUrl = 'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg',
+    this.defaultImageUrl = 'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg',
     Key? key,
   }) : super(key: key);
 
   @override
-  State<Card> createState() => _CardState();
+  State<NewsCard> createState() => _NewsCardState();
 }
 
-class _CardState extends State<Card> {
+class _NewsCardState extends State<NewsCard> {
   late String _displayImage;
   bool _imageError = false;
 
@@ -236,7 +296,7 @@ class _CardState extends State<Card> {
   }
 
   @override
-  void didUpdateWidget(Card oldWidget) {
+  void didUpdateWidget(NewsCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.images != widget.images ||
         oldWidget.defaultImageUrl != widget.defaultImageUrl) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jhc_app/Pages/Sports/SportOptions.dart';
+import 'package:jhc_app/Pages/Sportsmeet/Home.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:jhc_app/Pages/Sports/Card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -32,63 +33,90 @@ class SportsPage extends StatelessWidget {
             stream: firestore.collection('Sports').orderBy('name').snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Container(
+                  color: const Color.fromARGB(255, 15, 20, 25),
                   child: Center(
-                    child: Text(
-                      'Error loading Sports',
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 25, 30, 32),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 25,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        'Error loading Sports',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 );
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Container(
+                  color: const Color.fromARGB(255, 15, 20, 25),
                   child: Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: Colors.white,
-                      size: 150,
+                    child: Container(
+                      padding: const EdgeInsets.all(30),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 25, 30, 32),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 25,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 80,
+                      ),
                     ),
                   ),
                 );
               }
 
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return DecoratedBox(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF000000),
-                        Color(0xFF001020),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Container(
+                  color: const Color.fromARGB(255, 15, 20, 25),
                   child: Center(
-                    child: Text(
-                      'No Sports available',
-                      style: TextStyle(color: Colors.white),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 25, 30, 32),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 25,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        'No Sports available',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 );
@@ -98,19 +126,9 @@ class SportsPage extends StatelessWidget {
               final crossAxisCount = _getCrossAxisCount(context);
 
               return Container(
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF000000),
-                      Color(0xFF001020),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
+                color: const Color.fromARGB(255, 15, 20, 25),
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       double childAspectRatio = 1.1;
@@ -121,8 +139,8 @@ class SportsPage extends StatelessWidget {
                       return GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
                           childAspectRatio: childAspectRatio,
                         ),
                         itemCount: documents.length,
@@ -134,54 +152,57 @@ class SportsPage extends StatelessWidget {
 
                           return GestureDetector(
                             onTap: () {
-                              if (sportName.toLowerCase() == 'cricket' ||
-                                  sportName.toLowerCase() == 'basketball') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SportOptions(sportName: sportName),
-                                  ),
-                                );
-                              }
-                              // if (sportName.toLowerCase() == 'sportsmeet') {
-                              //   Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) =>
-                              //           SportsmeetPageHome(),
-                              //     ),
-                              //   );
-                              // } 
-                              else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SportsDetailsPage(sportName: sportName),
-                                  ),
-                                );
-                              }
-                            },
+  final name = sportName.toLowerCase();
+
+  // For cricket & basketball → SportOptions
+  if (name == 'cricket' || name == 'basketball') {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SportOptions(sportName: sportName),
+      ),
+    );
+  }
+  else if (name == 'sportsmeet') {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SportsmeetHome(),
+      ),
+    );
+  }
+  else {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SportsDetailsPage(sportName: sportName),
+      ),
+    );
+  }
+},
+
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(15),
+                                color: const Color.fromARGB(255, 25, 30, 32),
+                                borderRadius: BorderRadius.circular(25),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 6,
-                                    spreadRadius: 1,
-                                    offset: Offset(0, 3),
-                                  )
+                                    color: Colors.black.withOpacity(0.6),
+                                    blurRadius: 25,
+                                    offset: const Offset(0, 5),
+                                  ),
                                 ],
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.1),
+                                  width: 1,
+                                ),
                               ),
                               child: Stack(
                                 children: [
                                   if (imageUrl.isNotEmpty &&
                                       imageUrl.startsWith('http'))
                                     ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(25),
                                       child: CachedNetworkImage(
                                         imageUrl: imageUrl,
                                         width: double.infinity,
@@ -200,10 +221,19 @@ class SportsPage extends StatelessWidget {
                                         cacheManager: CustomCacheManager(),
                                       ),
                                     ),
+                                  if (imageUrl.isEmpty ||
+                                      !imageUrl.startsWith('http'))
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 40, 45, 50),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                    ),
                                   Positioned.fill(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
+                                        borderRadius: BorderRadius.circular(25),
                                         gradient: LinearGradient(
                                           colors: [
                                             Colors.black.withOpacity(0.6),
@@ -245,17 +275,59 @@ class SportsPage extends StatelessWidget {
             },
           );
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error initializing Firebase',
-              style: TextStyle(color: Colors.white),
+          return Container(
+            color: const Color.fromARGB(255, 15, 20, 25),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 25, 30, 32),
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.6),
+                      blurRadius: 25,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  'Error initializing Firebase',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           );
         } else {
-          return Center(
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              color: Colors.white,
-              size: 150,
+          return Container(
+            color: const Color.fromARGB(255, 15, 20, 25),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 25, 30, 32),
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.6),
+                      blurRadius: 25,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+                child: LoadingAnimationWidget.staggeredDotsWave(
+                  color: Colors.white,
+                  size: 80,
+                ),
+              ),
             ),
           );
         }

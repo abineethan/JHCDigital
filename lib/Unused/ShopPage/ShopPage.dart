@@ -1,15 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jhc_app/Home/News.dart';
+import 'package:jhc_app/widgets/Details.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:jhc_app/Unused/breakingCard.dart';
 
 final Future<FirebaseApp> firebaseApp = Firebase.initializeApp();
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class ShopPage extends StatelessWidget {
   static const String defaultImageUrl =
-      'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg';
+      'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg';
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,7 @@ class ShopPage extends StatelessWidget {
                                 final image = data['image']?.toString() ?? '';
                                 final text = data['text']?.toString() ?? '';
 
-                                return BreakingNewsCard(
+                                return NewsCard(
                                   urls: price.isNotEmpty
                                       ? "Rs $price"
                                       : "Price not available",
@@ -115,7 +117,7 @@ class ShopPage extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(vertical: 10),
                                   height:
                                       MediaQuery.of(context).size.height * 0.3,
-                                  child: BreakingNewsCard(
+                                  child: NewsCard(
                                     urls: price.isNotEmpty
                                         ? "Rs $price"
                                         : "Price not available",
@@ -156,6 +158,140 @@ class ShopPage extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+class NewsCard extends StatefulWidget {
+  final String urls;
+  final List<String> imglist;
+  final String images;
+  final String txts;
+  final String? utube;
+  final String? description;
+  final String defaultImageUrl;
+
+  const NewsCard({
+    required this.urls,
+    required this.images,
+    required this.txts,
+    this.description,
+    this.imglist = const [""],
+    this.utube,
+    this.defaultImageUrl = 'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg',
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<NewsCard> createState() => _NewsCardState();
+}
+
+class _NewsCardState extends State<NewsCard> {
+  late String _displayImage;
+  bool _imageError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _displayImage =
+        widget.images.isNotEmpty ? widget.images : widget.defaultImageUrl;
+  }
+
+  @override
+  void didUpdateWidget(NewsCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.images != widget.images ||
+        oldWidget.defaultImageUrl != widget.defaultImageUrl) {
+      _displayImage =
+          widget.images.isNotEmpty ? widget.images : widget.defaultImageUrl;
+      _imageError = false;
+    }
+  }
+
+  ImageProvider _getImageProvider() {
+    if (_imageError) {
+      return NetworkImage(widget.defaultImageUrl);
+    }
+
+    return CachedNetworkImageProvider(
+      _displayImage,
+      cacheManager: NewsCacheManager(),
+      errorListener: (err) => setState(() {
+        _imageError = true;
+        _displayImage = widget.defaultImageUrl;
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Details(
+              urls: widget.urls,
+              images: _imageError ? widget.defaultImageUrl : _displayImage,
+              txts: widget.txts,
+              description: widget.description ?? "",
+              imglist: widget.imglist,
+              utube: widget.utube ?? "",
+            ),
+          ),
+        );
+      },
+      child: Hero(
+        tag: _imageError ? widget.defaultImageUrl : _displayImage,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Container(
+              margin: EdgeInsets.symmetric(
+                vertical: constraints.maxHeight * 0.02,
+              ),
+              height: constraints.maxHeight * 0.43,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.0),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: _getImageProvider(),
+                ),
+                border: Border.all(width: 0),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  gradient: LinearGradient(
+                    colors: [Colors.transparent, Colors.black],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.txts,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenHeight * 0.022,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

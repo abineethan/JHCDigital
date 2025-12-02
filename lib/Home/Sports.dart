@@ -62,7 +62,7 @@ class SportsHome extends StatelessWidget {
                 return bDate.compareTo(aDate);
               });
 
-              return allActivities.take(5).toList();
+              return allActivities.take(10).toList();
             });
           });
 
@@ -70,20 +70,15 @@ class SportsHome extends StatelessWidget {
             stream: activitiesStream,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                return _buildErrorWidget('Error loading sports activities');
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: Colors.white,
-                    size: 150,
-                  ),
-                );
+                return _buildLoadingWidget();
               }
 
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No Club Activities available'));
+                return _buildEmptyWidget();
               }
 
               final screenHeight = MediaQuery.of(context).size.height;
@@ -95,7 +90,7 @@ class SportsHome extends StatelessWidget {
                   final doc = activities[index];
                   final data = doc.data() as Map<String, dynamic>;
 
-                  return Card(
+                  return LiquidSportsCard(
                     urls: data['url'] ?? '',
                     images: (data['images']?.isNotEmpty ?? false)
                         ? data['images'][0].toString()
@@ -118,26 +113,105 @@ class SportsHome extends StatelessWidget {
                   enableInfiniteScroll: true,
                   enlargeCenterPage: true,
                   viewportFraction: 0.9,
+                  autoPlayInterval: Duration(seconds: 5),
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  pauseAutoPlayOnTouch: true,
+                  scrollPhysics: BouncingScrollPhysics(),
                 ),
               );
             },
           );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return _buildErrorWidget('Error initializing Firebase');
         } else {
-          return Center(
-            child: LoadingAnimationWidget.staggeredDotsWave(
-              color: Colors.white,
-              size: 150,
-            ),
-          );
+          return _buildLoadingWidget();
         }
       },
     );
   }
+
+  Widget _buildLoadingWidget() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue.withOpacity(0.1),
+              Colors.purple.withOpacity(0.1)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: LoadingAnimationWidget.fallingDot(
+          color: Colors.white,
+          size: 60,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget(String error) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.red.withOpacity(0.1),
+              Colors.orange.withOpacity(0.1)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.red.withOpacity(0.3)),
+        ),
+        child: Text(
+          error,
+          style: TextStyle(color: Colors.white70),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyWidget() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(25),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.grey.withOpacity(0.1),
+              Colors.blueGrey.withOpacity(0.1)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(color: Colors.white.withOpacity(0.1)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.sports_baseball_rounded,
+                size: 50, color: Colors.white30),
+            SizedBox(height: 10),
+            Text(
+              'No sports activities available',
+              style: TextStyle(color: Colors.white60, fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class Card extends StatefulWidget {
+class LiquidSportsCard extends StatefulWidget {
   final String urls;
   final List<String> imglist;
   final String images;
@@ -146,22 +220,22 @@ class Card extends StatefulWidget {
   final String? description;
   final String defaultImageUrl;
 
-  const Card({
+  const LiquidSportsCard({
     required this.urls,
     required this.images,
     required this.txts,
     this.description,
     this.imglist = const [""],
     this.utube,
-    this.defaultImageUrl = 'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg',
+    this.defaultImageUrl = 'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg',
     Key? key,
   }) : super(key: key);
 
   @override
-  State<Card> createState() => _CardState();
+  State<LiquidSportsCard> createState() => _LiquidSportsCardState();
 }
 
-class _CardState extends State<Card> {
+class _LiquidSportsCardState extends State<LiquidSportsCard> {
   late String _displayImage;
   bool _imageError = false;
 
@@ -173,7 +247,7 @@ class _CardState extends State<Card> {
   }
 
   @override
-  void didUpdateWidget(Card oldWidget) {
+  void didUpdateWidget(LiquidSportsCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.images != widget.images ||
         oldWidget.defaultImageUrl != widget.defaultImageUrl) {
@@ -202,12 +276,12 @@ class _CardState extends State<Card> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => Details(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => Details(
               urls: widget.urls,
               images: _imageError ? widget.defaultImageUrl : _displayImage,
               txts: widget.txts,
@@ -215,37 +289,67 @@ class _CardState extends State<Card> {
               imglist: widget.imglist,
               utube: widget.utube ?? "",
             ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
           ),
         );
       },
-      child: Hero(
-        tag: _imageError ? widget.defaultImageUrl : _displayImage,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Container(
-              margin: EdgeInsets.symmetric(
-                vertical: constraints.maxHeight * 0.02,
-              ),
-              height: constraints.maxHeight * 0.43,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: _getImageProvider(),
-                ),
-                border: Border.all(width: 0),
-              ),
-              child: Container(
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          vertical: 6,
+          horizontal: 2,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                  gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: _getImageProvider(),
                   ),
                 ),
-                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.1),
+                        Colors.black.withOpacity(0.8),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.0, 0.5, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.orange.withOpacity(0.05),
+                      Colors.red.withOpacity(0.05),
+                      Colors.transparent,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,6 +360,13 @@ class _CardState extends State<Card> {
                         color: Colors.white,
                         fontSize: screenHeight * 0.022,
                         fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.8),
+                            blurRadius: 10,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -263,8 +374,17 @@ class _CardState extends State<Card> {
                   ],
                 ),
               ),
-            );
-          },
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.1),
+                    width: 1,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

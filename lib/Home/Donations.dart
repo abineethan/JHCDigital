@@ -35,7 +35,7 @@ class DonationsHome extends StatelessWidget {
           return StreamBuilder<QuerySnapshot>(
             stream: firestore.collection('Donations')
                 .orderBy('date', descending: true)
-                .limit(5)
+                .limit(10)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -136,7 +136,7 @@ class DonationCard extends StatefulWidget {
     this.description,
     this.imglist = const [""],
     this.utube,
-    this.defaultImageUrl = 'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg',
+    this.defaultImageUrl = 'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg',
     Key? key,
   }) : super(key: key);
 

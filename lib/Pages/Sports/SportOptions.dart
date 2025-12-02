@@ -21,45 +21,30 @@ class SportOptions extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 25, 30, 32),
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF121212),
-                Color(0xFF1E1E1E),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
           ),
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF000000),
-              Color(0xFF001020),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        color: const Color.fromARGB(255, 15, 20, 25),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              
               _buildOptionCard(
                 context,
                 icon: Icons.leaderboard_rounded,
                 title: 'Scores',
                 subtitle: 'View match results and player statistics',
                 gradientColors: [
-                  const Color(0xFF6A11CB),
-                  const Color(0xFF2575FC),
+                  const Color.fromARGB(255, 68, 208, 255),
+                  const Color.fromARGB(255, 32, 150, 255),
                 ],
                 onTap: () {
                   Navigator.push(
@@ -70,23 +55,22 @@ class SportOptions extends StatelessWidget {
                   );
                 },
               ),
-              
-              const SizedBox(height: 25),
-              
+              const SizedBox(height: 20),
               _buildOptionCard(
                 context,
                 icon: Icons.new_releases_rounded,
                 title: 'Updates',
-                subtitle: 'Latest news',
+                subtitle: 'Latest news and announcements',
                 gradientColors: [
-                  const Color(0xFF11998E),
-                  const Color(0xFF38EF7D),
+                  const Color.fromARGB(255, 255, 107, 107),
+                  const Color.fromARGB(255, 255, 64, 129),
                 ],
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SportsDetailsPage(sportName: sportName),
+                      builder: (context) =>
+                          SportsDetailsPage(sportName: sportName),
                     ),
                   );
                 },
@@ -108,13 +92,12 @@ class SportOptions extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(25),
       child: Container(
         width: double.infinity,
-        height: 150,
-        padding: const EdgeInsets.all(20),
+        height: 180,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(25),
           gradient: LinearGradient(
             colors: gradientColors,
             begin: Alignment.topLeft,
@@ -123,19 +106,22 @@ class SportOptions extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: gradientColors[0].withOpacity(0.4),
-              spreadRadius: 1,
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: 25,
+              offset: const Offset(0, 8),
             ),
           ],
+          border: Border.all(
+            color: Colors.white.withOpacity(0.2),
+            width: 1,
+          ),
         ),
         child: Stack(
           children: [
             Positioned(
-              right: 15,
-              top: 15,
+              right: 20,
+              top: 20,
               child: Opacity(
-                opacity: 0.3,
+                opacity: 0.15,
                 child: Icon(
                   icon,
                   size: 80,
@@ -143,34 +129,63 @@ class SportOptions extends StatelessWidget {
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1,
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 28,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned.fill(
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.transparent,
+                  ),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.white.withOpacity(0.05),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 5),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),

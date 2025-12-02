@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:jhc_app/widgets/ImageView.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:jhc_app/widgets/YoutubePlayer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,7 +21,7 @@ class Details extends StatefulWidget {
     required this.utube,
     this.description,
     this.imglist = const [""],
-    this.defaultImageUrl = 'https://i.ibb.co/R42fQnMh/86b4166adc3b.jpg',
+    this.defaultImageUrl = 'https://i.ibb.co/Y7sbhNrV/f24fe5746117.jpg',
     Key? key,
   }) : super(key: key);
 
@@ -34,6 +34,7 @@ class _DetailsState extends State<Details> {
   bool _isExpanded = false;
   bool _showSeeMoreButton = false;
   late TextPainter _textPainter;
+  final ScrollController _scrollController = ScrollController();
 
   bool isNumeric(String str) {
     return str.startsWith("Rs");
@@ -89,7 +90,7 @@ class _DetailsState extends State<Details> {
 
   Widget _buildDescription() {
     if (widget.description == null || widget.description!.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return Padding(
@@ -97,15 +98,15 @@ class _DetailsState extends State<Details> {
       child: Container(
         padding: _getDescriptionInnerPadding(),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.grey[850]!, Colors.grey[900]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(_getBorderRadius()),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.4),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: _getShadowBlurRadius(),
               offset: Offset(0, _getShadowOffset()),
             )
@@ -121,29 +122,35 @@ class _DetailsState extends State<Details> {
               overflow: _isExpanded ? null : TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: _getDescriptionFontSize(),
-                color: Colors.white70,
-                height: 1.5,
+                color: Colors.white.withOpacity(0.9),
+                height: 1.6,
+                letterSpacing: -0.2,
               ),
             ),
             if (_showSeeMoreButton)
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                    _checkTextOverflow();
-                  });
-                },
-                child: Text(
-                  _isExpanded ? 'See Less' : 'See More',
-                  style: TextStyle(
-                    color: Colors.blue[400],
-                    fontSize: _getDescriptionFontSize() * 0.9,
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                      _checkTextOverflow();
+                    });
+                  },
+                  child: Text(
+                    _isExpanded ? 'See Less' : 'See More',
+                    style: TextStyle(
+                      color: Colors.blue[400],
+                      fontSize: _getDescriptionFontSize() * 0.9,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size(50, 30),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  style: TextButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    minimumSize: const Size(50, 36),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                 ),
               ),
           ],
@@ -154,35 +161,35 @@ class _DetailsState extends State<Details> {
 
   EdgeInsets _getDescriptionPadding() {
     final width = MediaQuery.of(context).size.width;
-    if (width < 600) return EdgeInsets.all(16.0);
-    if (width < 1200) return EdgeInsets.all(24.0);
-    return EdgeInsets.symmetric(vertical: 32.0);
+    if (width < 600) return const EdgeInsets.all(20);
+    if (width < 1200) return const EdgeInsets.all(24);
+    return const EdgeInsets.symmetric(vertical: 32.0);
   }
 
   EdgeInsets _getDescriptionInnerPadding() {
     final width = MediaQuery.of(context).size.width;
-    if (width < 600) return EdgeInsets.all(16.0);
-    if (width < 1200) return EdgeInsets.all(24.0);
-    return EdgeInsets.all(32.0);
+    if (width < 600) return const EdgeInsets.all(20);
+    if (width < 1200) return const EdgeInsets.all(24);
+    return const EdgeInsets.all(32);
   }
 
   double _getBorderRadius() {
     final width = MediaQuery.of(context).size.width;
-    if (width < 600) return 12;
-    if (width < 1200) return 16;
-    return 20;
+    if (width < 600) return 20;
+    if (width < 1200) return 24;
+    return 28;
   }
 
   double _getShadowBlurRadius() {
     final width = MediaQuery.of(context).size.width;
-    if (width < 600) return 10;
-    if (width < 1200) return 15;
-    return 20;
+    if (width < 600) return 15;
+    if (width < 1200) return 20;
+    return 25;
   }
 
   double _getShadowOffset() {
     final width = MediaQuery.of(context).size.width;
-    if (width < 600) return 4;
+    if (width < 600) return 6;
     if (width < 1200) return 8;
     return 10;
   }
@@ -192,12 +199,13 @@ class _DetailsState extends State<Details> {
       borderRadius: BorderRadius.circular(borderRadius),
       child: Container(
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
-              blurRadius: 10,
+              blurRadius: 15,
               spreadRadius: 2,
-              offset: Offset(0, 4),
+              offset: const Offset(0, 6),
             )
           ],
         ),
@@ -207,9 +215,14 @@ class _DetailsState extends State<Details> {
               : imageUrl,
           fit: fit,
           cacheManager: DetailsCacheManager(),
-          placeholder: (context, url) => Center(
-            child: CircularProgressIndicator(
-                color: const Color.fromARGB(255, 255, 255, 255)),
+          placeholder: (context, url) => Container(
+            color: Colors.white.withOpacity(0.1),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.blue[400],
+                strokeWidth: 2,
+              ),
+            ),
           ),
           errorWidget: (context, url, error) {
             if (!_imageErrors.containsKey(imageUrl)) {
@@ -219,9 +232,13 @@ class _DetailsState extends State<Details> {
                 });
               });
             }
-            return Image.network(
-              widget.defaultImageUrl,
-              fit: fit,
+            return Container(
+              color: Colors.white.withOpacity(0.1),
+              child: Icon(
+                Icons.broken_image,
+                color: Colors.white.withOpacity(0.3),
+                size: 40,
+              ),
             );
           },
         ),
@@ -231,19 +248,21 @@ class _DetailsState extends State<Details> {
 
   Widget _buildMobileLayout() {
     return SingleChildScrollView(
+      controller: _scrollController,
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildDescription(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
+                crossAxisSpacing: 20.0,
+                mainAxisSpacing: 20.0,
                 childAspectRatio: 0.8,
               ),
               itemCount: widget.imglist.length,
@@ -253,7 +272,7 @@ class _DetailsState extends State<Details> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ImageFromUrl(
+                        builder: (context) => ImageView(
                           imageUrl: _imageErrors[widget.imglist[index]] == true
                               ? widget.defaultImageUrl
                               : widget.imglist[index],
@@ -275,7 +294,7 @@ class _DetailsState extends State<Details> {
           ),
           if (widget.utube.isNotEmpty && !isNumeric(widget.urls))
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: GestureDetector(
                 onTap: () async {
                   await Navigator.push(
@@ -292,24 +311,32 @@ class _DetailsState extends State<Details> {
                     Container(
                       height: MediaQuery.of(context).size.height * 0.3,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
+                        borderRadius: BorderRadius.circular(16.0),
                       ),
                       child: _buildImage(
                         'https://img.youtube.com/vi/${widget.utube}/maxresdefault.jpg',
                         BoxFit.cover,
-                        12.0,
+                        16.0,
                       ),
                     ),
                     Container(
+                      width: 60,
+                      height: 60,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.blue[400]!.withOpacity(0.9),
                         shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          )
+                        ],
                       ),
-                      padding: const EdgeInsets.all(16.0),
                       child: Icon(
                         Icons.play_arrow,
-                        size: 40,
-                        color: Colors.blue[400],
+                        size: 30,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -318,7 +345,7 @@ class _DetailsState extends State<Details> {
             ),
           if (widget.urls.isNotEmpty && !isNumeric(widget.urls))
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: ElevatedButton.icon(
                 onPressed: () async {
                   final Uri uri = Uri.parse(widget.urls);
@@ -326,21 +353,28 @@ class _DetailsState extends State<Details> {
                     throw Exception('Could not launch ${widget.urls}');
                   }
                 },
-                icon: Icon(Icons.link, color: Colors.white),
+                icon: Icon(Icons.link, color: Colors.white, size: 20),
                 label: Text(
-                  "Visit Website",
-                  style: TextStyle(color: Colors.white),
+                  "Visit",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[800],
+                  backgroundColor: Colors.blue[500],
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  elevation: 2,
+                  shadowColor: Colors.blue[400]!.withOpacity(0.3),
                 ),
               ),
             ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -348,6 +382,8 @@ class _DetailsState extends State<Details> {
 
   Widget _buildTabletLayout() {
     return SingleChildScrollView(
+      controller: _scrollController,
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -360,8 +396,8 @@ class _DetailsState extends State<Details> {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 20.0,
-                mainAxisSpacing: 20.0,
+                crossAxisSpacing: 24.0,
+                mainAxisSpacing: 24.0,
                 childAspectRatio: 1.3,
               ),
               itemCount: widget.imglist.length,
@@ -371,7 +407,7 @@ class _DetailsState extends State<Details> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ImageFromUrl(
+                        builder: (context) => ImageView(
                           imageUrl: _imageErrors[widget.imglist[index]] == true
                               ? widget.defaultImageUrl
                               : widget.imglist[index],
@@ -419,15 +455,23 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     Container(
+                      width: 70,
+                      height: 70,
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.blue[400]!.withOpacity(0.9),
                         shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          )
+                        ],
                       ),
-                      padding: const EdgeInsets.all(20.0),
                       child: Icon(
                         Icons.play_arrow,
-                        size: 50,
-                        color: Colors.blue[400],
+                        size: 35,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -447,23 +491,29 @@ class _DetailsState extends State<Details> {
                         throw Exception('Could not launch ${widget.urls}');
                       }
                     },
-                    icon: Icon(Icons.link, color: Colors.white, size: 28),
+                    icon: Icon(Icons.link, color: Colors.white, size: 24),
                     label: Text(
-                      "Visit Website",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      "Visit",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[800],
+                      backgroundColor: Colors.blue[500],
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 18),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      elevation: 2,
+                      shadowColor: Colors.blue[400]!.withOpacity(0.3),
                     ),
                   ),
                 ),
               ),
             ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
         ],
       ),
     );
@@ -471,6 +521,8 @@ class _DetailsState extends State<Details> {
 
   Widget _buildDesktopLayout() {
     return SingleChildScrollView(
+      controller: _scrollController,
+      physics: const BouncingScrollPhysics(),
       child: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -497,7 +549,7 @@ class _DetailsState extends State<Details> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ImageFromUrl(
+                            builder: (context) => ImageView(
                               imageUrl:
                                   _imageErrors[widget.imglist[index]] == true
                                       ? widget.defaultImageUrl
@@ -549,15 +601,23 @@ class _DetailsState extends State<Details> {
                               ),
                             ),
                             Container(
+                              width: 80,
+                              height: 80,
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.5),
+                                color: Colors.blue[400]!.withOpacity(0.9),
                                 shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  )
+                                ],
                               ),
-                              padding: const EdgeInsets.all(24.0),
                               child: Icon(
                                 Icons.play_arrow,
-                                size: 60,
-                                color: Colors.blue[400],
+                                size: 40,
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -579,23 +639,29 @@ class _DetailsState extends State<Details> {
                             throw Exception('Could not launch ${widget.urls}');
                           }
                         },
-                        icon: Icon(Icons.link, color: Colors.white, size: 30),
+                        icon: Icon(Icons.link, color: Colors.white, size: 24),
                         label: Text(
-                          "Visit Website",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+                          "Visit",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[800],
+                          backgroundColor: Colors.blue[500],
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 20),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          elevation: 2,
+                          shadowColor: Colors.blue[400]!.withOpacity(0.3),
                         ),
                       ),
                     ),
                   ),
                 ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -606,29 +672,48 @@ class _DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 20,
+              color: Colors.white,
+            ),
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           widget.txts,
           style: TextStyle(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            fontSize: 21,
+            color: Colors.white,
+            fontSize: 20,
             fontWeight: FontWeight.w600,
+            letterSpacing: -0.5,
           ),
         ),
         centerTitle: true,
-        iconTheme:
-            IconThemeData(color: const Color.fromARGB(255, 255, 255, 255)),
       ),
       body: Container(
-        constraints: BoxConstraints.expand(),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.grey[850]!, Colors.grey[900]!],
+            colors: [
+              Color(0xFF1C1C1E),
+              Color(0xFF2C2C2E),
+            ],
           ),
         ),
         child: LayoutBuilder(
@@ -641,53 +726,6 @@ class _DetailsState extends State<Details> {
               return _buildDesktopLayout();
             }
           },
-        ),
-      ),
-    );
-  }
-}
-
-class ImageFromUrl extends StatelessWidget {
-  final String imageUrl;
-
-  const ImageFromUrl({required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[900],
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme:
-            IconThemeData(color: const Color.fromARGB(255, 255, 255, 255)),
-      ),
-      body: Center(
-        child: PhotoView(
-          imageProvider: CachedNetworkImageProvider(
-            imageUrl,
-            cacheManager: DetailsCacheManager(),
-          ),
-          minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.covered * 2,
-          backgroundDecoration: BoxDecoration(
-            color: Colors.grey[900],
-          ),
-          loadingBuilder: (context, event) => Center(
-            child: CircularProgressIndicator(
-              value: event == null
-                  ? 0
-                  : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
-              color: const Color.fromARGB(255, 255, 255, 255),
-            ),
-          ),
-          errorBuilder: (context, error, stackTrace) => Center(
-            child: Icon(
-              Icons.broken_image,
-              color: const Color.fromARGB(255, 255, 255, 255),
-              size: 60,
-            ),
-          ),
         ),
       ),
     );
